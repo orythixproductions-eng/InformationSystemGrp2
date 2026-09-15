@@ -791,6 +791,8 @@ h2 {
 }
 
 .reference {
+    position: relative;
+    cursor: pointer;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -799,16 +801,30 @@ h2 {
     border: 1px solid var(--border);
     border-radius: 12px;
     background: var(--card);
-    transition: .3s;
+    transition: all .3s ease;
 }
 
 .reference:hover {
-    border-color: rgba(56,189,248,.5);
+    border-color: rgba(56,189,248,.6);
+    background: rgba(15, 23, 42, 0.88);
     transform: translateX(5px);
+    box-shadow:
+        0 10px 30px rgba(0,0,0,.35),
+        0 0 25px rgba(56,189,248,.08),
+        inset 0 0 20px rgba(56,189,248,.03);
+}
+
+.reference:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
 }
 
 .reference strong {
-    font-size: 14px;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    display: inline-block;
+    margin-bottom: 2px;
 }
 
 .reference span {
@@ -816,9 +832,308 @@ h2 {
     font-size: 11px;
 }
 
+.reference .reference-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 6px;
+    font-family: Orbitron, sans-serif;
+    font-size: 8px;
+    letter-spacing: 1.2px;
+    color: var(--cyan);
+    opacity: 0.75;
+    transition: .25s ease;
+}
+
+.reference:hover .reference-hint {
+    opacity: 1;
+    color: #fff;
+    transform: translateX(3px);
+}
+
 .reference a {
     color: var(--cyan);
+    font-family: Orbitron, sans-serif;
+    font-size: 9px;
+    letter-spacing: 0.8px;
+    padding: 9px 14px;
+    border-radius: 8px;
+    border: 1px solid rgba(56,189,248,.3);
+    background: rgba(56,189,248,.06);
+    transition: all .25s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    z-index: 2;
+}
+
+.reference a:hover {
+    background: rgba(56,189,248,.2);
+    border-color: var(--cyan);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(56,189,248,.25);
+}
+
+/* =========================================================
+   REFERENCE MODAL & CONNECTIONS
+   ========================================================= */
+
+.reference-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 110;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+}
+
+.reference-modal.active {
+    display: flex;
+    animation: referenceModalFade .25s ease;
+}
+
+@keyframes referenceModalFade {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.reference-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,.78);
+    backdrop-filter: blur(14px);
+}
+
+.reference-panel {
+    position: relative;
+    width: min(760px, 100%);
+    max-height: 88vh;
+    overflow-y: auto;
+    padding: 38px;
+    border-radius: 22px;
+    border: 1px solid rgba(56,189,248,.35);
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8,15,31,.98),
+            rgba(15,23,42,.98)
+        );
+    box-shadow:
+        0 30px 100px rgba(0,0,0,.65),
+        0 0 80px rgba(56,189,248,.08);
+    animation: referencePanelIn .35s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes referencePanelIn {
+    from {
+        transform: translateY(30px) scale(.96);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0) scale(1);
+    }
+}
+
+.reference-close {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    border: 1px solid rgba(148,163,184,.15);
+    background: rgba(255,255,255,.03);
+    color: #94a3b8;
+    font-size: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: .3s;
+}
+
+.reference-close:hover {
+    color: white;
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px rgba(56,189,248,.15);
+}
+
+.reference-modal-label {
+    font-family: Orbitron, sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--cyan);
+    margin-bottom: 12px;
+}
+
+.reference-modal-title {
+    font-family: Orbitron, sans-serif;
+    font-size: clamp(25px,4vw,40px);
+    margin-bottom: 8px;
+    color: var(--white);
+}
+
+.reference-modal-subtitle {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+.reference-connections-label {
+    font-family: Orbitron, sans-serif;
+    color: var(--cyan);
+    font-size: 9px;
+    letter-spacing: 2px;
+    margin-bottom: 14px;
+}
+
+.reference-connections {
+    display: grid;
+    gap: 12px;
+}
+
+.reference-connection {
+    display: grid;
+    grid-template-columns: 55px 1fr auto;
+    align-items: center;
+    gap: 15px;
+    padding: 16px;
+    border: 1px solid rgba(56,189,248,.15);
+    border-radius: 13px;
+    background: rgba(56,189,248,.035);
+    transition: .3s;
+    cursor: pointer;
+}
+
+.reference-connection:hover {
+    border-color: rgba(56,189,248,.45);
+    background: rgba(56,189,248,.07);
+    transform: translateX(4px);
+    box-shadow: 0 0 25px rgba(56,189,248,.06);
+}
+
+.reference-slide-number {
+    width: 48px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(56,189,248,.08);
+    border: 1px solid rgba(56,189,248,.2);
+    color: var(--cyan);
+    font-family: Orbitron, sans-serif;
     font-size: 10px;
+}
+
+.reference-connection-info strong {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 5px;
+    color: var(--white);
+}
+
+.reference-connection-info span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.reference-go {
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(56,189,248,.25);
+    background: rgba(56,189,248,.06);
+    color: var(--cyan);
+    font-family: Orbitron, sans-serif;
+    font-size: 8px;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    transition: .3s;
+}
+
+.reference-go:hover {
+    background: rgba(56,189,248,.15);
+    border-color: var(--cyan);
+    box-shadow: 0 0 20px rgba(56,189,248,.12);
+}
+
+.reference-source {
+    margin-top: 25px;
+    padding-top: 22px;
+    border-top: 1px solid rgba(148,163,184,.1);
+}
+
+.reference-source a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 15px;
+    border: 1px solid rgba(56,189,248,.25);
+    border-radius: 9px;
+    background: rgba(56,189,248,.06);
+    color: var(--cyan);
+    font-family: Orbitron, sans-serif;
+    font-size: 9px;
+    letter-spacing: 1px;
+    transition: .3s;
+    text-decoration: none;
+}
+
+.reference-source a:hover {
+    background: rgba(56,189,248,.14);
+    border-color: var(--cyan);
+    box-shadow: 0 0 25px rgba(56,189,248,.12);
+}
+
+/* Reference Slide Highlight Glow */
+.slide.reference-highlight .slide-inner {
+    animation: referenceSlideHighlight 1.8s ease;
+}
+
+@keyframes referenceSlideHighlight {
+    0% {
+        filter: brightness(1);
+    }
+    20% {
+        filter: brightness(1.5);
+    }
+    40% {
+        filter: brightness(1.2);
+    }
+    60% {
+        filter: brightness(1.5);
+    }
+    100% {
+        filter: brightness(1);
+    }
+}
+
+.slide.reference-highlight {
+    animation: referenceBorderGlow 1.8s ease;
+}
+
+@keyframes referenceBorderGlow {
+    0% {
+        box-shadow: inset 0 0 0 rgba(56,189,248,0);
+    }
+    25% {
+        box-shadow: inset 0 0 80px rgba(56,189,248,.12);
+    }
+    50% {
+        box-shadow: inset 0 0 120px rgba(139,92,246,.12);
+    }
+    75% {
+        box-shadow: inset 0 0 80px rgba(56,189,248,.12);
+    }
+    100% {
+        box-shadow: inset 0 0 0 rgba(56,189,248,0);
+    }
 }
 
 .example-modal {
@@ -1109,6 +1424,19 @@ h2 {
 
     .example-panel {
         padding: 30px 20px;
+    }
+
+    .reference-panel {
+        padding: 30px 20px;
+    }
+
+    .reference-connection {
+        grid-template-columns: 45px 1fr;
+    }
+
+    .reference-go {
+        grid-column: 2;
+        justify-self: start;
     }
 
     .reference {
@@ -2498,7 +2826,12 @@ h2 {
         <div class="reference-list">
 
 
-            <article class="reference">
+            <article
+                class="reference"
+                onclick="openReference('openstax')"
+                tabindex="0"
+                role="button"
+                aria-label="OpenStax - Click to view connected slides">
 
                 <div>
                     <strong>
@@ -2510,19 +2843,29 @@ h2 {
                     <span>
                         Foundations of Information Systems
                     </span>
+
+                    <div class="reference-hint">
+                        VIEW CONNECTED SLIDES →
+                    </div>
                 </div>
 
                 <a
                     href="https://openstax.org/books/foundations-information-systems"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                    onclick="event.stopPropagation()">
                     OPEN SOURCE ↗
                 </a>
 
             </article>
 
 
-            <article class="reference">
+            <article
+                class="reference"
+                onclick="openReference('fao')"
+                tabindex="0"
+                role="button"
+                aria-label="FAO - Click to view connected slides">
 
                 <div>
                     <strong>
@@ -2534,19 +2877,29 @@ h2 {
                     <span>
                         Establishing a Management Information System
                     </span>
+
+                    <div class="reference-hint">
+                        VIEW CONNECTED SLIDES →
+                    </div>
                 </div>
 
                 <a
                     href="https://www.fao.org/4/W5830E/w5830e0k.htm"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                    onclick="event.stopPropagation()">
                     OPEN SOURCE ↗
                 </a>
 
             </article>
 
 
-            <article class="reference">
+            <article
+                class="reference"
+                onclick="openReference('ecampus')"
+                tabindex="0"
+                role="button"
+                aria-label="eCampusOntario - Click to view connected slides">
 
                 <div>
                     <strong>
@@ -2558,19 +2911,29 @@ h2 {
                     <span>
                         Information Systems for Business and Beyond
                     </span>
+
+                    <div class="reference-hint">
+                        VIEW CONNECTED SLIDES →
+                    </div>
                 </div>
 
                 <a
                     href="https://ecampusontario.pressbooks.pub/informationsystemscdn/"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                    onclick="event.stopPropagation()">
                     OPEN SOURCE ↗
                 </a>
 
             </article>
 
 
-            <article class="reference">
+            <article
+                class="reference"
+                onclick="openReference('ieee')"
+                tabindex="0"
+                role="button"
+                aria-label="IEEE Technology Navigator - Click to view connected slides">
 
                 <div>
                     <strong>
@@ -2582,19 +2945,29 @@ h2 {
                     <span>
                         Information Systems
                     </span>
+
+                    <div class="reference-hint">
+                        VIEW CONNECTED SLIDES →
+                    </div>
                 </div>
 
                 <a
                     href="https://technav.ieee.org/topic/information-systems/"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                    onclick="event.stopPropagation()">
                     OPEN SOURCE ↗
                 </a>
 
             </article>
 
 
-            <article class="reference">
+            <article
+                class="reference"
+                onclick="openReference('techtarget')"
+                tabindex="0"
+                role="button"
+                aria-label="TechTarget - Click to view connected slides">
 
                 <div>
                     <strong>
@@ -2606,17 +2979,21 @@ h2 {
                     <span>
                         What is an Information System?
                     </span>
+
+                    <div class="reference-hint">
+                        VIEW CONNECTED SLIDES →
+                    </div>
                 </div>
 
                 <a
                     href="https://www.techtarget.com/whatis/definition/IS-information-system-or-information-services"
                     target="_blank"
-                    rel="noopener noreferrer">
+                    rel="noopener noreferrer"
+                    onclick="event.stopPropagation()">
                     OPEN SOURCE ↗
                 </a>
 
             </article>
-
         </div>
 
     </div>
@@ -2709,6 +3086,85 @@ h2 {
     </div>
 
 </div>
+
+<!-- =========================================================
+     REFERENCE CONNECTION MODAL
+     ========================================================= -->
+
+<div
+    class="reference-modal"
+    id="referenceModal"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="referenceModalTitle">
+
+    <div
+        class="reference-backdrop"
+        onclick="closeReference()"
+        aria-hidden="true">
+    </div>
+
+
+    <div class="reference-panel">
+
+        <button
+            class="reference-close"
+            type="button"
+            onclick="closeReference()"
+            aria-label="Close reference connections">
+
+            ×
+
+        </button>
+
+
+        <div class="reference-modal-label">
+            REFERENCE CONNECTION
+        </div>
+
+
+        <h2
+            class="reference-modal-title"
+            id="referenceModalTitle">
+        </h2>
+
+
+        <p
+            class="reference-modal-subtitle"
+            id="referenceModalSubtitle">
+        </p>
+
+
+        <div class="reference-connections-label">
+            CONNECTED PRESENTATION SECTIONS
+        </div>
+
+
+        <div
+            class="reference-connections"
+            id="referenceConnections">
+        </div>
+
+
+        <div class="reference-source">
+
+            <a
+                id="referenceSourceLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer">
+
+                OPEN ORIGINAL SOURCE ↗
+
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
 
 <div
     class="lightbox"
@@ -2920,41 +3376,80 @@ slides.forEach(slide =>
    KEYBOARD CONTROLS
    ========================================================= */
 
-document.addEventListener("keydown", e => {
+    document.addEventListener("keydown", e => {
 
-    if(
+    /* =====================================================
+       REFERENCE MODAL
+       ===================================================== */
+
+    if (
         document
-        .getElementById("exampleModal")
-        .classList.contains("active")
-    ){
+            .getElementById("referenceModal")
+            .classList
+            .contains("active")
+    ) {
 
-        if(e.key === "Escape"){
+        if (e.key === "Escape") {
+
+            closeReference();
+
+        }
+
+        return;
+    }
+
+
+    /* =====================================================
+       EXAMPLE MODAL
+       ===================================================== */
+
+    if (
+        document
+            .getElementById("exampleModal")
+            .classList
+            .contains("active")
+    ) {
+
+        if (e.key === "Escape") {
+
             closeExample();
+
         }
 
         return;
     }
 
 
-    if(
+    /* =====================================================
+       IMAGE LIGHTBOX
+       ===================================================== */
+
+    if (
         document
-        .getElementById("lightbox")
-        .classList.contains("active")
-    ){
+            .getElementById("lightbox")
+            .classList
+            .contains("active")
+    ) {
 
-        if(e.key === "Escape"){
+        if (e.key === "Escape") {
+
             closeLightbox();
+
         }
 
         return;
     }
 
 
-    if(
+    /* =====================================================
+       PRESENTATION NAVIGATION
+       ===================================================== */
+
+    if (
         e.key === "ArrowDown" ||
         e.key === "ArrowRight" ||
         e.key === "PageDown"
-    ){
+    ) {
 
         e.preventDefault();
 
@@ -2963,11 +3458,11 @@ document.addEventListener("keydown", e => {
     }
 
 
-    if(
+    if (
         e.key === "ArrowUp" ||
         e.key === "ArrowLeft" ||
         e.key === "PageUp"
-    ){
+    ) {
 
         e.preventDefault();
 
@@ -2976,7 +3471,11 @@ document.addEventListener("keydown", e => {
     }
 
 
-    if(e.key === "Home"){
+    /* =====================================================
+       HOME / END
+       ===================================================== */
+
+    if (e.key === "Home") {
 
         e.preventDefault();
 
@@ -2985,7 +3484,7 @@ document.addEventListener("keydown", e => {
     }
 
 
-    if(e.key === "End"){
+    if (e.key === "End") {
 
         e.preventDefault();
 
@@ -2994,13 +3493,18 @@ document.addEventListener("keydown", e => {
     }
 
 
-    if(e.key === "f" || e.key === "F"){
+    /* =====================================================
+       FULLSCREEN
+       ===================================================== */
+
+    if (e.key === "f" || e.key === "F") {
 
         toggleFullscreen();
 
     }
 
 });
+
 
 
 /* =========================================================
@@ -3804,6 +4308,504 @@ const examples = {
 
 };
 
+/* =========================================================
+   REFERENCE CONNECTION DATABASE
+   ========================================================= */
+
+const referenceConnections = {
+
+    openstax: {
+
+        title: "OpenStax",
+
+        subtitle:
+            "Foundations of Information Systems",
+
+        source:
+            "https://openstax.org/books/foundations-information-systems",
+
+        slides: [
+
+            {
+                number: 2,
+                title: "Information System",
+                description:
+                    "Core definition and explanation of an Information System."
+            },
+
+            {
+                number: 3,
+                title: "Data vs Information",
+                description:
+                    "Explains how raw data becomes meaningful information."
+            },
+
+            {
+                number: 4,
+                title: "Five Core Components",
+                description:
+                    "Supports the discussion of hardware, software, data, people, and processes."
+            },
+
+            {
+                number: 6,
+                title: "Information Processes",
+                description:
+                    "Connects to how information systems collect, process, store, and distribute information."
+            },
+
+            {
+                number: 10,
+                title: "Types of Information Systems",
+                description:
+                    "Provides background for different information system classifications."
+            }
+
+        ]
+
+    },
+
+
+    fao: {
+
+        title: "FAO",
+
+        subtitle:
+            "Establishing a Management Information System",
+
+        source:
+            "https://www.fao.org/4/W5830E/w5830e0k.htm",
+
+        slides: [
+
+            {
+                number: 2,
+                title: "Information System",
+                description:
+                    "Supports the explanation of information systems and their organizational purpose."
+            },
+
+            {
+                number: 5,
+                title: "People in an IS",
+                description:
+                    "Connects people and organizational roles with information systems."
+            },
+
+            {
+                number: 6,
+                title: "Information Processes",
+                description:
+                    "Relates to the collection, processing, storage, and use of information."
+            },
+
+            {
+                number: 9,
+                title: "Role of Information Systems",
+                description:
+                    "Connects information systems with management and decision-making."
+            }
+
+        ]
+
+    },
+
+
+    ecampus: {
+
+        title: "eCampusOntario",
+
+        subtitle:
+            "Information Systems for Business and Beyond",
+
+        source:
+            "https://ecampusontario.pressbooks.pub/informationsystemscdn/",
+
+        slides: [
+
+            {
+                number: 2,
+                title: "Information System",
+                description:
+                    "Supports the basic definition and purpose of an information system."
+            },
+
+            {
+                number: 3,
+                title: "Data vs Information",
+                description:
+                    "Supports the distinction between raw data and processed information."
+            },
+
+            {
+                number: 4,
+                title: "Five Core Components",
+                description:
+                    "Connects to the major components that make up an information system."
+            },
+
+            {
+                number: 5,
+                title: "People in an IS",
+                description:
+                    "Supports the human element of information systems."
+            },
+
+            {
+                number: 6,
+                title: "Information Processes",
+                description:
+                    "Connects to system processes and the movement of information."
+            },
+
+            {
+                number: 7,
+                title: "Technology in IS",
+                description:
+                    "Supports the role of computers, networks, software, and databases."
+            },
+
+            {
+                number: 10,
+                title: "Types of Information Systems",
+                description:
+                    "Provides background for information system types and organizational applications."
+            }
+
+        ]
+
+    },
+
+
+    ieee: {
+
+        title: "IEEE Technology Navigator",
+
+        subtitle:
+            "Information Systems",
+
+        source:
+            "https://technav.ieee.org/topic/information-systems/",
+
+        slides: [
+
+            {
+                number: 2,
+                title: "Information System",
+                description:
+                    "Provides technology-oriented context for information systems."
+            },
+
+            {
+                number: 4,
+                title: "Five Core Components",
+                description:
+                    "Connects information systems with technology and organizational components."
+            },
+
+            {
+                number: 7,
+                title: "Technology in IS",
+                description:
+                    "Directly connects to the role of technology in information systems."
+            },
+
+            {
+                number: 10,
+                title: "Types of Information Systems",
+                description:
+                    "Connects information systems with different technological and organizational applications."
+            },
+
+            {
+                number: 11,
+                title: "Information Systems Everywhere",
+                description:
+                    "Connects information systems with real-world technological applications."
+            }
+
+        ]
+
+    },
+
+
+    techtarget: {
+
+        title: "TechTarget",
+
+        subtitle:
+            "What is an Information System?",
+
+        source:
+            "https://www.techtarget.com/whatis/definition/IS-information-system-or-information-services",
+
+        slides: [
+
+            {
+                number: 2,
+                title: "Information System",
+                description:
+                    "Supports the main definition of an information system."
+            },
+
+            {
+                number: 3,
+                title: "Data vs Information",
+                description:
+                    "Connects data processing with useful information."
+            },
+
+            {
+                number: 4,
+                title: "Five Core Components",
+                description:
+                    "Supports the explanation of the major elements of an information system."
+            },
+
+            {
+                number: 5,
+                title: "People in an IS",
+                description:
+                    "Connects people with the operation and management of information systems."
+            },
+
+            {
+                number: 6,
+                title: "Information Processes",
+                description:
+                    "Supports the concept of collecting, processing, storing, and distributing information."
+            },
+
+            {
+                number: 7,
+                title: "Technology in IS",
+                description:
+                    "Connects technology with information system operations."
+            }
+
+        ]
+
+    }
+
+};
+
+/* =========================================================
+   OPEN REFERENCE CONNECTIONS
+   ========================================================= */
+
+function openReference(key){
+
+    const reference =
+        referenceConnections[key];
+
+    if(!reference) return;
+
+
+    const modal =
+        document.getElementById("referenceModal");
+
+
+    const title =
+        document.getElementById("referenceModalTitle");
+
+
+    const subtitle =
+        document.getElementById("referenceModalSubtitle");
+
+
+    const connections =
+        document.getElementById("referenceConnections");
+
+
+    const sourceLink =
+        document.getElementById("referenceSourceLink");
+
+
+    title.textContent =
+        reference.title;
+
+
+    subtitle.textContent =
+        reference.subtitle;
+
+
+    sourceLink.href =
+        reference.source;
+
+
+    connections.innerHTML = "";
+
+
+    reference.slides.forEach(slide => {
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "reference-connection";
+
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+        item.setAttribute("aria-label", `Go to slide ${slide.number}: ${slide.title}`);
+
+        item.innerHTML = `
+
+            <div class="reference-slide-number">
+
+                ${String(slide.number).padStart(2,"0")}
+
+            </div>
+
+
+            <div class="reference-connection-info">
+
+                <strong>
+                    ${slide.title}
+                </strong>
+
+                <span>
+                    ${slide.description}
+                </span>
+
+            </div>
+
+
+            <button
+                class="reference-go"
+                type="button"
+                aria-label="Go to slide ${slide.number}">
+
+                GO TO SLIDE →
+
+            </button>
+
+        `;
+
+        item.addEventListener("click", () => {
+            closeReference();
+            goToReferenceSlide(slide.number);
+        });
+
+        item.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                closeReference();
+                goToReferenceSlide(slide.number);
+            }
+        });
+
+        const button =
+            item.querySelector(".reference-go");
+
+        button.addEventListener("click", event => {
+
+            event.stopPropagation();
+
+            closeReference();
+
+            goToReferenceSlide(slide.number);
+
+        });
+
+        connections.appendChild(item);
+
+    });
+
+
+    modal.classList.add("active");
+
+
+    modal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+
+    document.body.classList.add(
+        "modal-open"
+    );
+
+}
+
+
+/* =========================================================
+   CLOSE REFERENCE
+   ========================================================= */
+
+function closeReference(){
+
+    const modal =
+        document.getElementById("referenceModal");
+
+
+    modal.classList.remove("active");
+
+
+    modal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+
+    document.body.classList.remove(
+        "modal-open"
+    );
+
+}
+
+
+/* =========================================================
+   GO TO CONNECTED SLIDE
+   ========================================================= */
+
+function goToReferenceSlide(slideNumber){
+
+    const index =
+        slideNumber - 1;
+
+    if(
+        index < 0 ||
+        index >= slides.length
+    ){
+        return;
+    }
+
+    goTo(index);
+
+    /* Remove previous highlights */
+
+    slides.forEach(slide => {
+
+        slide.classList.remove(
+            "reference-highlight"
+        );
+
+    });
+
+
+    /* Add highlight */
+
+    setTimeout(() => {
+
+        slides[index].classList.add(
+            "reference-highlight"
+        );
+
+    }, 350);
+
+
+    /* Remove highlight after animation */
+
+    setTimeout(() => {
+
+        slides[index].classList.remove(
+            "reference-highlight"
+        );
+
+    }, 2400);
+
+}
+
 
 /* =========================================================
    OPEN EXAMPLE
@@ -3939,6 +4941,28 @@ function closeLightbox(){
 
 updateUI();
 
+ /* =========================================================
+    REFERENCE KEYBOARD ACCESS
+    ========================================================= */
+
+document.querySelectorAll(".reference").forEach(reference => {
+
+    reference.addEventListener("keydown", event => {
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+
+            event.preventDefault();
+
+            reference.click();
+
+        }
+
+    });
+
+});
 </script>
 
 
