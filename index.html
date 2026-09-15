@@ -34,6 +34,7 @@
 html {
     scroll-behavior: smooth;
 }
+
 body {
     font-family: Inter, sans-serif;
     background: var(--bg);
@@ -1133,7 +1134,7 @@ h2 {
     <div class="logo-area">
 
         <div class="logo" aria-hidden="true">
-            <svg >
+            <svg viewBox="0 0 64 64">
                 <path d="M8 14 L30 20 L32 52 L10 46 Z"/>
                 <path d="M56 14 L34 20 L32 52 L54 46 Z"/>
                 <path d="M32 20 L32 52"/>
@@ -1271,6 +1272,7 @@ h2 {
     </button>
 
 </aside>
+
     </div>
 
 </section>
@@ -2802,6 +2804,8 @@ function goTo(index){
 
     currentSlide = index;
 
+    slides[currentSlide].classList.add("visible");
+
     slides[currentSlide].scrollIntoView({
         behavior: "smooth",
         block: "start"
@@ -2904,7 +2908,7 @@ const observer =
         });
 
     },{
-        threshold: .55
+        threshold: .15
     });
 
 
@@ -3040,6 +3044,7 @@ visuals["information-system"] = `
 
 <svg
     class="visual-svg"
+    viewBox="0 0 900 430"
     role="img"
     aria-label="Student Information System diagram">
 
@@ -3936,6 +3941,9 @@ function closeLightbox(){
 updateUI();
 
 </script>
+
+
+
 
 </body>
 </html>
